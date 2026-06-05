@@ -6,11 +6,13 @@ import base64
 # ==========================================
 # 1. CẤU HÌNH TRANG & KHỞI TẠO TRẠNG THÁI
 # ==========================================
+icon_image = Image.open("favicon.png") 
+
 st.set_page_config(
-    page_title="Prudential - Cổng thông tin & Quản lý bồi thường",
-    page_icon="🔴",
+    page_title="Trang chủ | Prudential Việt Nam", 
+    page_icon=icon_image,  
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed" 
 )
 
 # Khởi tạo các biến session_state
