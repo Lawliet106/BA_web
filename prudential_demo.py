@@ -3,6 +3,7 @@ import os
 import random
 import string
 import base64
+from PIL import Image
 # ==========================================
 # 1. CẤU HÌNH TRANG & KHỞI TẠO TRẠNG THÁI
 # ==========================================
