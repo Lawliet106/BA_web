@@ -195,7 +195,7 @@ with header_container:
                         st.session_state.temp_vai_tro = None
                     st.session_state.temp_vai_tro = st.selectbox(
                         "Chọn vai trò", 
-                        options=["Nhân viên Chăm sóc khách hàng", "Nhân viên Xử lí khiếu nại", "Nhân viên Xử lí bồi thường"],
+                        options=["Nhân viên Dịch vụ khách hàng", "Nhân viên Xử lí khiếu nại", "Nhân viên Xử lí bồi thường"],
                         index=None,
                         placeholder="Chọn vai trò",
                         label_visibility="collapsed"
@@ -677,7 +677,7 @@ elif st.session_state.page == 'login_employee':
                     
                     # Lấy dữ liệu vai trò từ thanh Header xuống để xử lý
                     vai_tro = st.session_state.temp_vai_tro
-                    if vai_tro == "Nhân viên Chăm sóc khách hàng":
+                    if vai_tro == "Nhân viên Dịch vụ khách hàng":
                         st.session_state.role = 'employee_cskh'
                     elif vai_tro == "Nhân viên Xử lí khiếu nại":
                         st.session_state.role = 'employee_xlkn'
@@ -749,7 +749,7 @@ elif st.session_state.logged_in and st.session_state.page == 'dashboard':
     if st.session_state.role == 'customer':
         role_label = "Khách hàng"
     elif st.session_state.role == 'employee_cskh':
-        role_label = "Nhân viên Chăm sóc khách hàng"
+        role_label = "Nhân viên Dịch vụ khách hàng"
     elif st.session_state.role == 'employee_xlkn':
         role_label = "Nhân viên Xử lí khiếu nại"
     elif st.session_state.role == 'employee_xlbt':
@@ -912,7 +912,7 @@ elif st.session_state.logged_in and st.session_state.page == 'dashboard':
                 st.markdown("<hr style='margin-top: 5px; margin-bottom: 15px; border-top: 1px solid #ccc;'>", unsafe_allow_html=True)
                 
                 if st.session_state.role == 'employee_cskh':
-                    phong_ban = "Phòng Chăm sóc Khách hàng"
+                    phong_ban = "Phòng Dịch vụ khách hàng"
                     ma_tk = "NV_CSKH_001"
                     ten_dn = "cskh_001"
                 elif st.session_state.role == 'employee_xlkn':
@@ -978,6 +978,52 @@ elif st.session_state.logged_in and st.session_state.page == 'dashboard':
             # 2.5.1 MÀN HÌNH XEM BẢNG HỒ SƠ
             if st.session_state.action_mode == 'view':
                 st.markdown("<h3 style='margin-bottom: 20px;'>Hồ sơ khiếu nại</h3>", unsafe_allow_html=True)
+
+                # --- THANH TÌM KIẾM ---
+                st.text_input("Tìm kiếm hồ sơ", placeholder="🔍 Tìm kiếm...", label_visibility="collapsed")
+                
+                # --- CSS CHO NÚT BỘ LỌC & SẮP XẾP ---
+                st.markdown("""
+                    <style>
+                    [data-testid="stHorizontalBlock"]:has(#filter-sort-row-kn) div[data-testid="stPopover"] button {
+                        width: 40px !important; height: 40px !important;
+                        border-radius: 50% !important; background-color: #f2f2f5 !important;
+                        border: 1px solid #ddd !important; padding: 0 !important;
+                        display: inline-flex !important; align-items: center !important;
+                        justify-content: center !important; font-size: 18px !important;
+                        color: #444 !important; line-height: 1 !important;
+                    }
+                    [data-testid="stHorizontalBlock"]:has(#filter-sort-row-kn) div[data-testid="stPopover"] button svg { display: none !important; }
+                    [data-testid="stHorizontalBlock"]:has(#filter-sort-row-kn) div[data-testid="stPopover"] button:hover {
+                        background-color: #e5e5e5 !important; border-color: #ed1b2e !important; color: #ed1b2e !important;
+                    }
+                    </style>
+                """, unsafe_allow_html=True)
+
+                # --- CẤU TRÚC NÚT ---
+                _, col_filter, col_space, col_sort = st.columns([10, 0.4, 0.2, 0.4], gap="small")
+                _.markdown('<span id="filter-sort-row-kn"></span>', unsafe_allow_html=True)
+
+                with col_filter:
+                    with st.popover("▽"):
+                        st.markdown("<p style='font-weight: bold; color: #ed1b2e; margin-bottom: 10px;'>BỘ LỌC DỮ LIỆU</p>", unsafe_allow_html=True)
+                        st.selectbox("Trạng thái", ["Tất cả", "Đã duyệt", "Đang duyệt", "Đang kiểm tra"], key="kn_loc_1")
+                        st.selectbox("Kết quả khiếu nại", ["Tất cả", "Đủ điều kiện bồi thường", "Chưa có kết quả", "Không đủ điều kiện bồi thường"], key="kn_loc_2")
+
+                with col_sort:
+                    with st.popover("⇅"):
+                        st.markdown("<p style='font-weight: bold; color: #111; margin-bottom: 15px; font-size: 16px;'>Sắp xếp theo</p>", unsafe_allow_html=True)
+                        s1, s2 = st.columns([1, 4], gap="small")
+                        with s1: 
+                            if os.path.exists("new.png"): st.image("new.png", width=30)
+                        with s2:
+                            if st.button("Mới nhất", key="kn_sort_new", help="link-btn"): pass
+                        
+                        s3, s4 = st.columns([1, 4], gap="small")
+                        with s3:
+                            if os.path.exists("old.png"): st.image("old.png", width=30)
+                        with s4:
+                            if st.button("Trễ nhất", key="kn_sort_old", help="link-btn"): pass
                 
                 h1, h2, h3, h4, h5 = st.columns([1.5, 2, 2, 2.5, 1.5])
                 h1.markdown("<div class='header-col'>Mã HS Khiếu nại</div>", unsafe_allow_html=True)
