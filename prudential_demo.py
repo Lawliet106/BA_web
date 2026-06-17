@@ -900,7 +900,7 @@ elif st.session_state.logged_in and st.session_state.page == 'dashboard':
                 st.markdown(f"""
                     <table style='width: 100%; border: none; font-size: 16px; line-height: 2.2;'>
                         <tr><td style='width: 32%; color: #333;'>Mã tài khoản:</td><td style='color: #111; font-weight: 500;'>KH0001</td></tr>
-                        <tr><td style='color: #333;'>Tên đăng nhập:</td><td style='color: #111; font-weight: 500;'>myhao_001</td></tr>
+                        <tr><td style='color: #333;'>Tên đăng nhập:</td><td style='color: #111; font-weight: 500;'>khachhang_001</td></tr>
                         <tr><td style='color: #333;'>Mật khẩu:</td><td style='color: #111; font-weight: 500;'>************* &nbsp; 👁️‍🗨️</td></tr>
                     </table>
                 """, unsafe_allow_html=True)
