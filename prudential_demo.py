@@ -1266,6 +1266,57 @@ elif st.session_state.logged_in and st.session_state.page == 'dashboard':
             
             # 2.6.1 Bảng danh sách Bồi thường
             if st.session_state.action_mode == 'view':
+                st.markdown("<h3 style='margin-bottom: 20px;'>Quản lý hồ sơ bồi thường</h3>", unsafe_allow_html=True)
+                st.text_input("Tìm kiếm hồ sơ", placeholder="🔍 Tìm kiếm...", label_visibility="collapsed")
+
+                # --- CSS RIÊNG CHO BỒI THƯỜNG (Dùng ID mới là filter-sort-row-bt) ---
+                st.markdown("""
+                    <style>
+                    [data-testid="stHorizontalBlock"]:has(#filter-sort-row-bt) div[data-testid="stPopover"] button {
+                        width: 40px !important; height: 40px !important;
+                        border-radius: 50% !important; background-color: #f2f2f5 !important;
+                        border: 1px solid #ddd !important; padding: 0 !important;
+                        display: inline-flex !important; align-items: center !important;
+                        justify-content: center !important; font-size: 18px !important;
+                        color: #444 !important; line-height: 1 !important;
+                    }
+                    [data-testid="stHorizontalBlock"]:has(#filter-sort-row-bt) div[data-testid="stPopover"] button svg { display: none !important; }
+                    [data-testid="stHorizontalBlock"]:has(#filter-sort-row-bt) div[data-testid="stPopover"] button:hover {
+                        background-color: #e5e5e5 !important; border-color: #ed1b2e !important; color: #ed1b2e !important;
+                    }
+                    </style>
+                """, unsafe_allow_html=True)
+
+                # --- CẤU TRÚC NÚT (Sửa ID thành filter-sort-row-bt) ---
+                _, col_filter, col_space, col_sort = st.columns([10, 0.4, 0.2, 0.4], gap="small")
+                _.markdown('<span id="filter-sort-row-bt"></span>', unsafe_allow_html=True)
+
+                with col_filter:
+                    with st.popover("▽"):
+                        st.markdown("<p style='font-weight: bold; color: #ed1b2e; margin-bottom: 10px;'>BỘ LỌC DỮ LIỆU</p>", unsafe_allow_html=True)
+                        st.selectbox("Trạng thái", ["Tất cả", "Đang kiểm tra", "Đang thẩm định", "Đã thẩm định"], key="bt_loc_1")
+                        st.selectbox("Kết quả giải quyết", ["Tất cả", "Chưa có kết quả", "Đủ điều kiện bồi thường", "Không đủ điều kiện bồi thường"], key="bt_loc_2")
+                        
+                        st.markdown("<p style='font-size: 16px; font-weight: bold; margin: 15px 0 5px 0;'>Ngày nộp hồ sơ</p>", unsafe_allow_html=True)
+                        d1, d2, d3 = st.columns(3)
+                        d1.text_input("Ngày", placeholder="Ngày", label_visibility="collapsed", key="bt_d")
+                        d2.text_input("Tháng", placeholder="Tháng", label_visibility="collapsed", key="bt_m")
+                        d3.text_input("Năm", placeholder="Năm", label_visibility="collapsed", key="bt_y")
+
+                with col_sort:
+                    with st.popover("⇅"):
+                        st.markdown("<p style='font-weight: bold; color: #111; margin-bottom: 15px; font-size: 16px;'>Sắp xếp theo</p>", unsafe_allow_html=True)
+                        s1, s2 = st.columns([1, 4], gap="small")
+                        with s1: 
+                            if os.path.exists("new.png"): st.image("new.png", width=30)
+                        with s2:
+                            if st.button("Mới nhất", key="bt_sort_new", help="link-btn"): pass
+                        
+                        s3, s4 = st.columns([1, 4], gap="small")
+                        with s3:
+                            if os.path.exists("old.png"): st.image("old.png", width=30)
+                        with s4:
+                            if st.button("Trễ nhất", key="bt_sort_old", help="link-btn"): pass
                 h1, h2, h3, h4, h5 = st.columns([1.5, 2, 2, 2.5, 1.5])
                 h1.markdown("<div class='header-col'>Mã HS Bồi thường</div>", unsafe_allow_html=True)
                 h2.markdown("<div class='header-col'>Hợp đồng bảo hiểm</div>", unsafe_allow_html=True)
@@ -1679,7 +1730,7 @@ elif st.session_state.logged_in and st.session_state.page == 'dashboard':
                         with st.popover("▽"):
                             st.markdown("<p style='font-weight: bold; color: #ed1b2e; margin-bottom: 10px;'>BỘ LỌC DỮ LIỆU</p>", unsafe_allow_html=True)
                             st.selectbox("Tình trạng hồ sơ", ["Tất cả", "Còn hiệu lực", "Hết hiệu lực"])
-                            st.selectbox("Sản phẩm bảo hiểm", ["Tất cả", "PRU-ĐẦU TƯ VỮNG TIẾN", "PRU-BẢO VỆ TỐI ĐA", "PRU-Yên Tâm Vui Khỏe", "PRU-Hành Trang Vui Khỏe", "PRU-Bảo vệ 24/7", "PRU-Easy365", "PRU-Nhiệt đới"])
+            
 
                     # NÚT 2: SẮP XẾP HỢP ĐỒNG
                     with col_sort:
@@ -1986,13 +2037,59 @@ elif st.session_state.logged_in and st.session_state.page == 'dashboard':
             """, unsafe_allow_html=True)
             
             if st.session_state.dashboard_tab == 'home':
-                st.info("👈 Vui lòng chọn một danh mục quản lý bên thanh Menu để bắt đầu làm việc.")
                 safe_image("dashboard.jpg")
                 
             elif st.session_state.dashboard_tab == 'ql_boithuong':
                 if st.session_state.action_mode == 'view':
                     st.markdown("<h3 style='margin-bottom: 20px;'>Quản lý hồ sơ bồi thường</h3>", unsafe_allow_html=True)
-                    
+                    st.text_input("Tìm kiếm hồ sơ", placeholder="🔍 Tìm kiếm...", label_visibility="collapsed")
+    
+                    # --- CSS CHO NÚT BỘ LỌC & SẮP XẾP ---
+                    st.markdown("""
+                        <style>
+                        [data-testid="stHorizontalBlock"]:has(#filter-sort-row-kn) div[data-testid="stPopover"] button {
+                            width: 40px !important; height: 40px !important;
+                            border-radius: 50% !important; background-color: #f2f2f5 !important;
+                            border: 1px solid #ddd !important; padding: 0 !important;
+                            display: inline-flex !important; align-items: center !important;
+                            justify-content: center !important; font-size: 18px !important;
+                            color: #444 !important; line-height: 1 !important;
+                        }
+                        [data-testid="stHorizontalBlock"]:has(#filter-sort-row-kn) div[data-testid="stPopover"] button svg { display: none !important; }
+                        [data-testid="stHorizontalBlock"]:has(#filter-sort-row-kn) div[data-testid="stPopover"] button:hover {
+                            background-color: #e5e5e5 !important; border-color: #ed1b2e !important; color: #ed1b2e !important;
+                        }
+                        </style>
+                    """, unsafe_allow_html=True)
+
+                    # --- CẤU TRÚC NÚT ---
+                    _, col_filter, col_space, col_sort = st.columns([10, 0.4, 0.2, 0.4], gap="small")
+                    _.markdown('<span id="filter-sort-row-kn"></span>', unsafe_allow_html=True)
+
+                    with col_filter:
+                        with st.popover("▽"):
+                            st.markdown("<p style='font-weight: bold; color: #ed1b2e; margin-bottom: 10px;'>BỘ LỌC DỮ LIỆU</p>", unsafe_allow_html=True)
+                            st.selectbox("Trạng thái", ["Tất cả", "Đang kiểm tra", "Đang thẩm định", "Đã thẩm định"], key="kn_loc_1")
+                            st.selectbox("Kết quả giải quyết", ["Tất cả", "Chưa có kết quả", "Đủ điều kiện bồi thường", "Không đủ điều kiện bồi thường"], key="kn_loc_2")
+                            st.markdown("<p style='font-size: 16px; font-weight: bold; margin: 15px 0 5px 0;'>Ngày nộp hồ sơ</p>", unsafe_allow_html=True)
+                            d1, d2, d3 = st.columns(3)
+                            d1.text_input("Ngày", placeholder="Ngày", label_visibility="collapsed", key="kn_d")
+                            d2.text_input("Tháng", placeholder="Tháng", label_visibility="collapsed", key="kn_m")
+                            d3.text_input("Năm", placeholder="Năm", label_visibility="collapsed", key="kn_y")
+                    with col_sort:
+                        with st.popover("⇅"):
+                            st.markdown("<p style='font-weight: bold; color: #111; margin-bottom: 15px; font-size: 16px;'>Sắp xếp theo</p>", unsafe_allow_html=True)
+                            s1, s2 = st.columns([1, 4], gap="small")
+                            with s1: 
+                                if os.path.exists("new.png"): st.image("new.png", width=30)
+                            with s2:
+                                if st.button("Mới nhất", key="kn_sort_new", help="link-btn"): pass
+                            
+                            s3, s4 = st.columns([1, 4], gap="small")
+                            with s3:
+                                if os.path.exists("old.png"): st.image("old.png", width=30)
+                            with s4:
+                                if st.button("Trễ nhất", key="kn_sort_old", help="link-btn"): pass
                     # Bảng dữ liệu
                     h1, h2, h3, h4, h5 = st.columns([1.5, 2, 2, 2.5, 1.5])
                     h1.markdown("<div class='header-col'>Mã HS Bồi thường</div>", unsafe_allow_html=True)
