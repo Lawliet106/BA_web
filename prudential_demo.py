@@ -195,7 +195,7 @@ with header_container:
                         st.session_state.temp_vai_tro = None
                     st.session_state.temp_vai_tro = st.selectbox(
                         "Chọn vai trò", 
-                        options=["Nhân viên Dịch vụ khách hàng", "Nhân viên Xử lí khiếu nại", "Nhân viên Xử lí bồi thường"],
+                        options=["Nhân viên Dịch vụ khách hàng", "Nhân viên Xử lí khiếu nại", "Nhân viên Bồi thường bảo hiểm"],
                         index=None,
                         placeholder="Chọn vai trò",
                         label_visibility="collapsed"
@@ -261,10 +261,11 @@ with header_container:
             with cols[2]:
                 st.markdown("""
     <style>
-    /* Ép cột chứa nút chuông phải nhảy lên */
-    div[data-testid="column"]:has(button[title="header-bell"]) {
-        position: relative !important;
-        top: -10px !important; /* Thử thay đổi số -10 thành -12, -15 để thấy nó nhích lên */
+    /* Căn giữa các cột (Thông tin cá nhân / Hợp đồng bảo hiểm / Chuông) theo chiều ngang hàng,
+       dựa trên chiều cao thực tế thay vì đẩy lệch bằng số px cố định */
+    div[data-testid="column"]:has(button[title="header-bell"]),
+    div[data-testid="column"]:has(button[title="header-profile"]) {
+        align-self: center !important;
     }
 
     /* Ép nút chuông bên trong */
@@ -275,6 +276,7 @@ with header_container:
         width: 42px !important;
         height: 42px !important;
         font-size: 20px !important;
+        line-height: 1 !important;
         padding: 0 !important;
         border-radius: 8px !important;
         display: inline-flex !important;
@@ -681,7 +683,7 @@ elif st.session_state.page == 'login_employee':
                         st.session_state.role = 'employee_cskh'
                     elif vai_tro == "Nhân viên Xử lí khiếu nại":
                         st.session_state.role = 'employee_xlkn'
-                    elif vai_tro == "Nhân viên Xử lí bồi thường":
+                    elif vai_tro == "Nhân viên Bồi thường bảo hiểm":
                         st.session_state.role = 'employee_xlbt'
                         
                     st.session_state.user_name = "Tên nhân viên"
@@ -753,7 +755,7 @@ elif st.session_state.logged_in and st.session_state.page == 'dashboard':
     elif st.session_state.role == 'employee_xlkn':
         role_label = "Nhân viên Xử lí khiếu nại"
     elif st.session_state.role == 'employee_xlbt':
-        role_label = "Nhân viên Xử lí bồi thường"
+        role_label = "Nhân viên Bồi thường bảo hiểm"
     else:
         role_label = "Nhân viên"
 
@@ -920,7 +922,7 @@ elif st.session_state.logged_in and st.session_state.page == 'dashboard':
                     ma_tk = "NV_XLKN_001"
                     ten_dn = "xlkn_001"
                 elif st.session_state.role == 'employee_xlbt':
-                    phong_ban = "Phòng Xử lí Bồi thường"
+                    phong_ban = "Phòng Bồi thường bảo hiểm"
                     ma_tk = "NV_XLBT_001"
                     ten_dn = "xlbt_001"
                 else:
@@ -2024,7 +2026,7 @@ elif st.session_state.logged_in and st.session_state.page == 'dashboard':
                         if btn_col.button("Cập nhật", type="primary", use_container_width=True):
                             st.success("Đã cập nhật hồ sơ!")
 
-        # --- 5. GIAO DIỆN NHÂN VIÊN XỬ LÍ BỒI THƯỜNG ---
+        # --- 5. GIAO DIỆN NHÂN VIÊN BỒI THƯỜNG BẢO HIỂM ---
         elif st.session_state.role == 'employee_xlbt':
             st.markdown("""
                 <style>
